@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lamberdar8singh.github.io/saudeteu/sitemap.xml

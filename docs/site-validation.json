@@ -1,0 +1,14 @@
+{
+  "state": "passed",
+  "expected_published_posts_and_pages": 49725,
+  "unique_rendered_ids": 49725,
+  "search_records": 49725,
+  "sitemap_urls": 49728,
+  "copied_media_files": 8532,
+  "published_site_bytes": 976220375,
+  "within_github_pages_1gb_limit": true,
+  "empty_titles_preserved": 0,
+  "empty_bodies_preserved": 0,
+  "mismatches": [],
+  "mismatch_count": 0
+}
