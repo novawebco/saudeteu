@@ -17,6 +17,8 @@ python tools/build_site.py
 python tools/verify_site.py
 ```
 
+The builder also creates `docs/assets/home-feed.json` from every populated category archive. The homepage shows eight category sections at a time and rotates through the complete feed on refresh, with a manual switch and a 90-second interval while the visitor is idle. The shared assets in `tools/site.css` and `tools/site.js` provide the site header, footer, social links, responsive layout, and visible post byline. Rebuild after changing the exported content so archives and the homepage feed stay in sync.
+
 The builder refuses to publish unless `export/manifest.json` records a passed source validation. The verifier streams the source records and checks every published page title and body, search entry, sitemap count, copied media file count, and the GitHub Pages 1 GB published-site size limit. See `docs/site-validation.md` for the latest result and `export/validation-report.md` for the original extraction validation.
 
 This is a static rendering of the backup. WordPress plugins, PHP shortcodes, comments, forms, and dynamic embeds do not run on GitHub Pages.

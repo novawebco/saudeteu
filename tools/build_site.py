@@ -16,6 +16,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import quote
 
+from home_feed import generate as generate_home_feed
+
 ROOT = Path(__file__).resolve().parents[1]
 EXPORT = ROOT / "export"
 DOCS = ROOT / "docs"
@@ -109,8 +111,8 @@ def shell(title: str, description: str, content: str, canonical: str, page_title
 <title>{esc(title_full)}</title><meta name="description" content="{esc(description[:300])}">
 <link rel="canonical" href="{esc(canonical)}"><link rel="stylesheet" href="{BASE_PATH}/assets/site.css">
 <link rel="icon" href="{BASE_PATH}/favicon.svg" type="image/svg+xml">
-</head><body><header class="site-header"><a class="brand" href="{BASE_PATH}/">Saúde Teu</a><nav><a href="{BASE_PATH}/">Início</a><a href="{BASE_PATH}/pages/">Páginas</a><a href="{BASE_PATH}/categories/">Categorias</a></nav></header>
-<main>{content}</main><footer><p>Arquivo estático de conteúdo recuperado de um backup WordPress. Conteúdo original preservado; alguns recursos dinâmicos e incorporações do WordPress podem não funcionar nesta versão estática.</p><p><a href="{BASE_PATH}/">Saúde Teu</a></p></footer>
+</head><body><header class="site-header"><div class="header-inner"><a class="brand" href="{BASE_PATH}/">Saúde Teu</a><nav class="site-nav" aria-label="Navegação principal"><a href="{BASE_PATH}/">Início</a><a href="{BASE_PATH}/categories/">Categorias</a><a href="{BASE_PATH}/pages/">Páginas</a></nav></div></header>
+<main id="main-content">{content}</main><footer><div class="footer-inner"><div><h2>Saúde Teu</h2><p>Informação sobre saúde, alimentação e bem-estar. O conteúdo é informativo e não substitui orientação, diagnóstico ou tratamento por um profissional de saúde.</p></div><div><h3>Saúde Teu</h3><ul class="footer-links"><li><a href="{BASE_PATH}/pages/sobre-nos--15604/">Sobre nós</a></li><li><a href="{BASE_PATH}/pages/contact--101/">Contato</a></li><li><a href="{BASE_PATH}/pages/politica-de-privacidade--15608/">Política de privacidade</a></li><li><a href="{BASE_PATH}/pages/aviso-legal--15985/">Aviso legal</a></li></ul></div><div><h3>Acompanhe</h3><ul class="social-links"><li><a href="https://twitter.com/saudeteu/">X / Twitter</a></li><li><a href="https://www.instagram.com/saudeteu/">Instagram</a></li><li><a href="https://pinterest.com/saudeteu/">Pinterest</a></li><li><a href="https://www.facebook.com/Saudeteuofficial/">Facebook</a></li><li><a href="https://www.linkedin.com/saude-teu/">LinkedIn</a></li></ul></div></div></footer>
 <script src="{BASE_PATH}/assets/site.js" defer></script></body></html>'''
 
 
@@ -146,8 +148,8 @@ def build():
     DOCS.mkdir(parents=True)
     (DOCS / ".nojekyll").write_text("", encoding="utf-8")
     (DOCS / "assets").mkdir()
-    write_text(DOCS / "assets/site.css", CSS)
-    write_text(DOCS / "assets/site.js", JS)
+    write_text(DOCS / "assets/site.css", (ROOT / "tools/site.css").read_text(encoding="utf-8"))
+    write_text(DOCS / "assets/site.js", (ROOT / "tools/site.js").read_text(encoding="utf-8"))
     write_text(DOCS / "favicon.svg", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0f766e"/><path d="M28 12h8v16h16v8H36v16h-8V36H12v-8h16z" fill="white"/></svg>')
 
     # Copy only actual upload media into the publish tree, preserving bytes.
@@ -192,7 +194,8 @@ def build():
                 if str(media_id) in media_by_id:
                     image = f'<img class="featured" src="{media_by_id[str(media_id)]}" alt="">'
                     break
-            content = f'<article><p class="eyebrow">{esc(rec["date"][:10])} · {"Artigo" if kind=="post" else "Página"}</p><h1>{esc(title)}</h1><div class="chips">{categories_html}</div>{image}<div class="article-body">{rewrite_media(body, media_by_url)}</div></article>'
+            byline = '<p class="article-byline">Por <strong>Dr. Amber Pelloe, MD</strong></p>' if kind == "post" else ""
+            content = f'<article><p class="eyebrow">{esc(rec["date"][:10])} · {"Artigo" if kind=="post" else "Página"}</p><h1>{esc(title)}</h1>{byline}<div class="chips">{categories_html}</div>{image}<div class="article-body">{rewrite_media(body, media_by_url)}</div></article>'
             write_text(target, shell(title, rec["excerpt"], content, SITE_ORIGIN + url))
 
     if not records:
@@ -229,6 +232,7 @@ def build():
     write_text(DOCS / "categories" / "index.html", shell("Categorias", "Categorias dos artigos Saúde Teu.", f'<h1>Categorias</h1><ul class="category-list">{cat_html}</ul>', SITE_URL + "/categories/"))
     page_links = "".join(f'<li><a href="{r["url"]}">{esc(r["title"] or "(sem título)")}</a></li>' for r in pages)
     write_text(DOCS / "pages" / "index.html", shell("Páginas", "Páginas publicadas recuperadas do backup.", f'<h1>Páginas</h1><ul class="category-list">{page_links}</ul>', SITE_URL + "/pages/"))
+    generate_home_feed(DOCS)
 
     # Split the sitemap below the 50,000-URL protocol limit.
     urls = [SITE_ORIGIN + rec["url"] for rec in records]
@@ -259,7 +263,7 @@ def build():
 def card(rec):
     cats = " ".join(f'<a class="chip" href="{BASE_PATH}/categories/{safe_slug(c["slug"],"category")}--{c["id"]}/">{esc(c["name"])}</a>' for c in rec["categories"])
     excerpt = esc(rec["excerpt"] or "")
-    return f'<article class="card"><p class="eyebrow">{esc(rec["date"][:10])}</p><h3><a href="{rec["url"]}">{esc(rec["title"] or "(sem título)")}</a></h3><p>{excerpt}</p><div class="chips">{cats}</div></article>'
+    return f'<article class="card"><p class="eyebrow">{esc(rec["date"][:10])}</p><h3><a href="{rec["url"]}">{esc(rec["title"] or "(sem título)")}</a></h3><p class="byline">Por Dr. Amber Pelloe, MD</p><p>{excerpt}</p><div class="chips">{cats}</div></article>'
 
 
 def pagination(current, total, route):
@@ -277,10 +281,6 @@ def pagination(current, total, route):
         next_link = f'<a rel="next" href="{prefix}/page/{current+1}/">Próxima →</a>'
     return f'<nav class="pagination">{prev_link}<span>Página {current} de {total}</span>{next_link}</nav>'
 
-
-CSS = r'''*{box-sizing:border-box}html{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#18312e;background:#f5f8f7;line-height:1.65}body{margin:0}.site-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem max(1.2rem,calc((100% - 1100px)/2));background:#fff;border-bottom:1px solid #dce7e4}.brand{font-size:1.4rem;font-weight:800;color:#0f766e;text-decoration:none}.site-header nav{display:flex;gap:1rem}.site-header nav a{color:#385753;text-decoration:none}main{max-width:1100px;margin:2rem auto;padding:0 1.2rem;min-height:60vh}.hero{background:#e4f3ef;border-radius:1.2rem;padding:2.4rem;margin-bottom:2rem}.hero h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.1;max-width:780px;margin:.3rem 0 1rem}.eyebrow{color:#5b7772;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;font-weight:700}.search-row{display:flex;gap:.6rem;max-width:680px}.search-row input{flex:1;padding:.85rem 1rem;border:1px solid #a8bfba;border-radius:.5rem;font:inherit}.search-row button{padding:.8rem 1.2rem;border:0;border-radius:.5rem;background:#0f766e;color:white;font:inherit;font-weight:700;cursor:pointer}.card{background:white;padding:1.2rem 1.4rem;border:1px solid #e0e9e6;border-radius:.8rem;margin:1rem 0}.card h3{margin:.2rem 0;font-size:1.25rem}.card h3 a{color:#115e59;text-decoration:none}.card h3 a:hover{text-decoration:underline}.card p{margin:.4rem 0}.chips{display:flex;flex-wrap:wrap;gap:.4rem}.chip{display:inline-block;border-radius:2rem;background:#e8f4f1;color:#176b63;text-decoration:none;padding:.12rem .65rem;font-size:.82rem}.article-body{background:white;padding:clamp(1rem,4vw,3rem);border-radius:1rem;border:1px solid #e0e9e6;overflow-wrap:anywhere}.article-body img,.featured{max-width:100%;height:auto}.article-body h2,.article-body h3{line-height:1.3;color:#174a45;margin-top:2rem}.article-body blockquote{border-left:4px solid #46a59a;padding-left:1rem;color:#536d68}.article-body table{border-collapse:collapse;max-width:100%;display:block;overflow:auto}.article-body td,.article-body th{border:1px solid #cddbd7;padding:.55rem}.featured{display:block;max-height:420px;object-fit:cover;border-radius:.8rem;margin:1rem 0}.pagination{display:flex;justify-content:space-between;align-items:center;padding:1.3rem 0;color:#5b7772}.pagination a{color:#0f766e;font-weight:700}.category-list{background:#fff;padding:1.5rem 2rem;border-radius:.8rem}.category-list li{padding:.4rem 0}footer{border-top:1px solid #dce7e4;background:#fff;padding:1.5rem max(1.2rem,calc((100% - 1100px)/2));color:#5b7772;font-size:.9rem}#search-results{margin-top:1rem}.results-count{font-weight:700}@media(max-width:650px){.site-header{align-items:flex-start;flex-direction:column}.hero{padding:1.4rem}.search-row{flex-direction:column}.pagination{gap:.5rem;font-size:.9rem}}'''
-
-JS = r'''document.addEventListener('DOMContentLoaded',function(){var form=document.getElementById('search-form');if(!form)return;form.addEventListener('submit',function(e){e.preventDefault();var q=(document.getElementById('search-q').value||'').trim().toLocaleLowerCase();var status=document.getElementById('search-status');var out=document.getElementById('search-results');if(!q){status.textContent='Digite um termo para buscar.';out.innerHTML='';return;}status.textContent='Carregando índice…';fetch('/saudeteu/search-index.json').then(function(r){if(!r.ok)throw new Error('Índice indisponível');return r.json();}).then(function(rows){var found=rows.filter(function(x){return (x.title+' '+x.excerpt).toLocaleLowerCase().includes(q);}).slice(0,50);status.textContent=found.length+' resultado(s), exibindo até 50.';out.innerHTML=found.map(function(x){return '<article class="card"><p class="eyebrow">'+esc(x.date.slice(0,10))+'</p><h3><a href="'+esc(x.url)+'">'+esc(x.title||'(sem título)')+'</a></h3><p>'+esc(x.excerpt||'')+'</p></article>';}).join('')||'<p>Nenhum resultado encontrado.</p>';}).catch(function(){status.textContent='Não foi possível carregar a busca.';});});function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}});'''
 
 
 if __name__ == "__main__":
