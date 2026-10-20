@@ -1,0 +1,269 @@
+{
+  "backup_format": "ZIP containing All-in-One WP Migration .wpress (4377-byte headers)",
+  "backup_name": "saudeteu-info-20260226-132638-v43377afhuxl.zip",
+  "backup_sha256": "c42a09cac6ae3b0e1255e37d205ecb236c6f24417cf9f6e3b36b04ffb044a1c1",
+  "archive_sha256": "c83a8c1f7343125aadf0dc34c744842f88f99e547f441cd3bb8d631aecf6a754",
+  "database_sha256": "007b206fba77631101edd28befb9f49ff480209435636db6e99a7287d4207811",
+  "detected_table_prefix": "SERVMASK_PREFIX_",
+  "total_records": 50502,
+  "record_types": {
+    "attachment": 678,
+    "custom_css": 2,
+    "page": 16,
+    "post": 49710,
+    "wpforms": 1,
+    "wpcf7_contact_form": 1,
+    "oembed_cache": 74,
+    "seopress_404": 12,
+    "seopress_schemas": 2,
+    "nav_menu_item": 5,
+    "revision": 1
+  },
+  "statuses": {
+    "inherit": 679,
+    "publish": 49821,
+    "draft": 1,
+    "auto-draft": 1
+  },
+  "type_status_counts": [
+    {
+      "type": "attachment",
+      "status": "inherit",
+      "count": 678
+    },
+    {
+      "type": "custom_css",
+      "status": "publish",
+      "count": 2
+    },
+    {
+      "type": "nav_menu_item",
+      "status": "publish",
+      "count": 5
+    },
+    {
+      "type": "oembed_cache",
+      "status": "publish",
+      "count": 74
+    },
+    {
+      "type": "page",
+      "status": "publish",
+      "count": 16
+    },
+    {
+      "type": "post",
+      "status": "auto-draft",
+      "count": 1
+    },
+    {
+      "type": "post",
+      "status": "publish",
+      "count": 49709
+    },
+    {
+      "type": "revision",
+      "status": "inherit",
+      "count": 1
+    },
+    {
+      "type": "seopress_404",
+      "status": "publish",
+      "count": 12
+    },
+    {
+      "type": "seopress_schemas",
+      "status": "draft",
+      "count": 1
+    },
+    {
+      "type": "seopress_schemas",
+      "status": "publish",
+      "count": 1
+    },
+    {
+      "type": "wpcf7_contact_form",
+      "status": "publish",
+      "count": 1
+    },
+    {
+      "type": "wpforms",
+      "status": "publish",
+      "count": 1
+    }
+  ],
+  "batches": {
+    "classified-records/attachment.jsonl": {
+      "count": 678,
+      "files": [
+        "classified-records/attachment.jsonl"
+      ]
+    },
+    "custom-post-types/custom_css.jsonl": {
+      "count": 2,
+      "files": [
+        "custom-post-types/custom_css.jsonl"
+      ]
+    },
+    "pages.jsonl": {
+      "count": 16,
+      "files": [
+        "pages.jsonl"
+      ]
+    },
+    "posts.jsonl": {
+      "count": 49710,
+      "files": [
+        "posts.jsonl",
+        "posts.part-0002.jsonl",
+        "posts.part-0003.jsonl",
+        "posts.part-0004.jsonl",
+        "posts.part-0005.jsonl",
+        "posts.part-0006.jsonl",
+        "posts.part-0007.jsonl",
+        "posts.part-0008.jsonl",
+        "posts.part-0009.jsonl",
+        "posts.part-0010.jsonl",
+        "posts.part-0011.jsonl",
+        "posts.part-0012.jsonl",
+        "posts.part-0013.jsonl",
+        "posts.part-0014.jsonl",
+        "posts.part-0015.jsonl",
+        "posts.part-0016.jsonl",
+        "posts.part-0017.jsonl",
+        "posts.part-0018.jsonl",
+        "posts.part-0019.jsonl",
+        "posts.part-0020.jsonl",
+        "posts.part-0021.jsonl",
+        "posts.part-0022.jsonl",
+        "posts.part-0023.jsonl"
+      ]
+    },
+    "custom-post-types/wpforms.jsonl": {
+      "count": 1,
+      "files": [
+        "custom-post-types/wpforms.jsonl"
+      ]
+    },
+    "custom-post-types/wpcf7_contact_form.jsonl": {
+      "count": 1,
+      "files": [
+        "custom-post-types/wpcf7_contact_form.jsonl"
+      ]
+    },
+    "custom-post-types/oembed_cache.jsonl": {
+      "count": 74,
+      "files": [
+        "custom-post-types/oembed_cache.jsonl"
+      ]
+    },
+    "custom-post-types/seopress_404.jsonl": {
+      "count": 12,
+      "files": [
+        "custom-post-types/seopress_404.jsonl"
+      ]
+    },
+    "custom-post-types/seopress_schemas.jsonl": {
+      "count": 2,
+      "files": [
+        "custom-post-types/seopress_schemas.jsonl"
+      ]
+    },
+    "classified-records/navigation.jsonl": {
+      "count": 5,
+      "files": [
+        "classified-records/navigation.jsonl"
+      ]
+    },
+    "classified-records/revision.jsonl": {
+      "count": 1,
+      "files": [
+        "classified-records/revision.jsonl"
+      ]
+    }
+  },
+  "media": {
+    "upload_files": 9715,
+    "preserved_files": 8532,
+    "preserved_bytes": 208460493,
+    "excluded_support_files": 1183,
+    "attachment_records_with_available_files": 629,
+    "attachment_records_without_available_files": 49,
+    "attachment_records_without_resolvable_path": 0,
+    "body_upload_references": 532,
+    "body_upload_references_missing": 517,
+    "external_embed_references": 1702,
+    "unresolved_relative_embed_references": 265,
+    "unique_body_upload_paths": 529,
+    "unique_body_upload_paths_missing": 514
+  },
+  "source_content_features": {
+    "HTML": 49730,
+    "shortcodes": 2740,
+    "Cyrillic": 9,
+    "replacement_character": 2
+  },
+  "redactions": 1,
+  "flags": 795,
+  "credential_content_review": [],
+  "batch_limit_bytes": 33554432,
+  "validation": {
+    "state": "passed",
+    "source_records": 50502,
+    "exported_records": 50502,
+    "unique_ids": 50502,
+    "independent_sql_title_body_matches": 50502,
+    "mismatches": 0,
+    "per_record_folders_verified": 49818,
+    "postmeta_rows_verified": 170362,
+    "media_files_hash_verified": 8532,
+    "source_type_status_counts_match": true,
+    "all_json_parsed": true,
+    "csv_titles_verified": 49818,
+    "backup_and_database_unchanged": true,
+    "duplicates_preserved": {
+      "title": {
+        "groups": 388,
+        "records": 793
+      },
+      "slug": {
+        "groups": 45,
+        "records": 94
+      }
+    },
+    "unresolved_media_id_references": 128,
+    "flags": {
+      "empty_body": 691,
+      "empty_body_attachment": 675,
+      "empty_body_custom_css": 1,
+      "unusually_large_body": 25,
+      "empty_body_post": 1,
+      "empty_title": 79,
+      "empty_body_seopress_404": 12,
+      "empty_body_seopress_schemas": 2
+    },
+    "largest_body": {
+      "ID": 57574,
+      "bytes": 161116
+    },
+    "largest_export_file": {
+      "path": "posts.part-0009.jsonl",
+      "bytes": 33678457
+    },
+    "export_data_bytes_before_reports": 1766508668,
+    "auxiliary_rows_secret_scanned": 51164
+  },
+  "limitations": [
+    "No live-site or remote URL availability checks; backup is authoritative.",
+    "Post passwords and credential-like metadata are excluded and paths recorded.",
+    "PHP serialized metadata is retained raw; only media mapping decodes supported scalars/arrays.",
+    "GUID and permalink settings preserved; current live permalinks not asserted."
+  ],
+  "original_table_prefix_from_package": "wpag_",
+  "related_table_coverage": {
+    "postmeta_source_rows": 170363,
+    "postmeta_orphan_rows": 0,
+    "relationship_source_rows": 49715,
+    "relationship_orphan_rows": 0
+  }
+}
