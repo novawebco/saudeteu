@@ -21,6 +21,8 @@ from home_feed import generate as generate_home_feed
 ROOT = Path(__file__).resolve().parents[1]
 EXPORT = ROOT / "export"
 DOCS = ROOT / "docs"
+CSS_VERSION = hashlib.sha256((ROOT / "tools/site.css").read_bytes()).hexdigest()[:10]
+JS_VERSION = hashlib.sha256((ROOT / "tools/site.js").read_bytes()).hexdigest()[:10]
 SITE_ORIGIN = "https://lamberdar8singh.github.io"
 SITE_URL = SITE_ORIGIN + "/saudeteu"
 BASE_PATH = "/saudeteu"
@@ -109,11 +111,11 @@ def shell(title: str, description: str, content: str, canonical: str, page_title
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-src https:; object-src 'none'; base-uri 'self'">
 <title>{esc(title_full)}</title><meta name="description" content="{esc(description[:300])}">
-<link rel="canonical" href="{esc(canonical)}"><link rel="stylesheet" href="{BASE_PATH}/assets/site.css">
+<link rel="canonical" href="{esc(canonical)}"><link rel="stylesheet" href="{BASE_PATH}/assets/site.css?v={CSS_VERSION}">
 <link rel="icon" href="{BASE_PATH}/favicon.svg" type="image/svg+xml">
 </head><body><header class="site-header"><div class="header-inner"><a class="brand" href="{BASE_PATH}/">Saúde Teu</a><nav class="site-nav" aria-label="Navegação principal"><a href="{BASE_PATH}/">Início</a><a href="{BASE_PATH}/categories/">Categorias</a><a href="{BASE_PATH}/pages/">Páginas</a></nav></div></header>
 <main id="main-content">{content}</main><footer><div class="footer-inner"><div><h2>Saúde Teu</h2><p>Informação sobre saúde, alimentação e bem-estar. O conteúdo é informativo e não substitui orientação, diagnóstico ou tratamento por um profissional de saúde.</p></div><div><h3>Saúde Teu</h3><ul class="footer-links"><li><a href="{BASE_PATH}/pages/sobre-nos--15604/">Sobre nós</a></li><li><a href="{BASE_PATH}/pages/contact--101/">Contato</a></li><li><a href="{BASE_PATH}/pages/politica-de-privacidade--15608/">Política de privacidade</a></li><li><a href="{BASE_PATH}/pages/aviso-legal--15985/">Aviso legal</a></li></ul></div><div><h3>Acompanhe</h3><ul class="social-links"><li><a href="https://twitter.com/saudeteu/">X / Twitter</a></li><li><a href="https://www.instagram.com/saudeteu/">Instagram</a></li><li><a href="https://pinterest.com/saudeteu/">Pinterest</a></li><li><a href="https://www.facebook.com/Saudeteuofficial/">Facebook</a></li><li><a href="https://www.linkedin.com/saude-teu/">LinkedIn</a></li></ul></div></div></footer>
-<script src="{BASE_PATH}/assets/site.js" defer></script></body></html>'''
+<script src="{BASE_PATH}/assets/site.js?v={JS_VERSION}" defer></script></body></html>'''
 
 
 def article_url(item):
@@ -150,6 +152,7 @@ def build():
     (DOCS / "assets").mkdir()
     write_text(DOCS / "assets/site.css", (ROOT / "tools/site.css").read_text(encoding="utf-8"))
     write_text(DOCS / "assets/site.js", (ROOT / "tools/site.js").read_text(encoding="utf-8"))
+    shutil.copy2(ROOT / "tools/saude-logo.png", DOCS / "assets/saude-logo.png")
     write_text(DOCS / "favicon.svg", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0f766e"/><path d="M28 12h8v16h16v8H36v16h-8V36H12v-8h16z" fill="white"/></svg>')
 
     # Copy only actual upload media into the publish tree, preserving bytes.
@@ -215,7 +218,7 @@ def build():
         nav = pagination(page_no + 1, total_pages, "")
         content = f'<section class="hero"><p class="eyebrow">Arquivo de artigos</p><h1>Saúde, bem-estar e informação</h1><p>{len(post_rows):,} artigos preservados do backup.</p><form id="search-form"><label for="search-q">Buscar artigos</label><div class="search-row"><input id="search-q" type="search" placeholder="Título ou palavras do resumo"><button>Buscar</button></div><p id="search-status" aria-live="polite"></p><div id="search-results"></div></form></section><section><h2>Artigos recentes</h2>{cards}{nav}</section>'
         path = DOCS / "index.html" if page_no == 0 else DOCS / "page" / str(page_no + 1) / "index.html"
-        write_text(path, shell("Início", "Artigos de saúde preservados do backup do site Saúde Teu.", content, SITE_URL + ("/" if page_no == 0 else f"/page/{page_no+1}/"), "Saúde Teu — artigos" if page_no == 0 else f"Artigos — página {page_no+1} | Saúde Teu"))
+        write_text(path, shell("Início", "Saúde Teu: artigos sobre alimentação, remédios naturais, bem-estar e cuidados com a saúde.", content, SITE_URL + ("/" if page_no == 0 else f"/page/{page_no+1}/"), "Saúde Teu | Comida e Remédio" if page_no == 0 else f"Artigos — página {page_no+1} | Saúde Teu"))
 
     # Category archive and page directory.
     cat_list = []
@@ -267,7 +270,7 @@ def card(rec):
 
 
 def pagination(current, total, route):
-    prefix = route if route else BASE_PATH
+    prefix = (route or BASE_PATH).rstrip("/")
     if route:
         here = "" if current == 1 else f"page/{current}/"
     else:

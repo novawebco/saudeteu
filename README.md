@@ -17,7 +17,9 @@ python tools/build_site.py
 python tools/verify_site.py
 ```
 
-The builder also creates `docs/assets/home-feed.json` from every populated category archive. The homepage shows eight category sections at a time and rotates through the complete feed on refresh, with a manual switch and a 90-second interval while the visitor is idle. The shared assets in `tools/site.css` and `tools/site.js` provide the site header, footer, social links, responsive layout, and visible post byline. Rebuild after changing the exported content so archives and the homepage feed stay in sync.
+The builder also creates `docs/assets/home-feed.json` from every populated category archive. The homepage presents eight category sections at a time, with up to 21 article cards per section. It rotates through all populated categories on refresh, on the “Trocar categorias” button, and every 90 seconds while the visitor is idle. A featured carousel highlights recent posts.
+
+The branded theme is maintained in `tools/site.css` and `tools/site.js`: the original Saúde Teu logo, pink two-row header, category ribbons, mosaic article grids, search, footer social links, responsive layouts, and the visible byline **Dr. Amber Pelloe, MD**. The same theme styles category archives and article pages. Asset URLs receive content hashes during a rebuild, so visitors do not retain an old stylesheet or script after publication. Rebuild after changing the exported content so archives and the homepage feed stay in sync.
 
 The builder refuses to publish unless `export/manifest.json` records a passed source validation. The verifier streams the source records and checks every published page title and body, search entry, sitemap count, copied media file count, and the GitHub Pages 1 GB published-site size limit. See `docs/site-validation.md` for the latest result and `export/validation-report.md` for the original extraction validation.
 
